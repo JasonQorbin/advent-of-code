@@ -1,6 +1,7 @@
 /*! \file This file serves as a small local library of functions that get used repeatedely in AoC-23 */
 
 #include <iostream>
+#include <cstring>
 
 /// A function that is typically placed at the top of the main method to check for correct command line arguments.
 ///
@@ -12,6 +13,15 @@ bool checkArgs(int argc, char* argv[]) {
     if (argc < 2 || strcmp(argv[1],"-l") == 0 && argc < 3) {
         cout << "Usage: " << argv[0] << "<inputFile.txt" << endl;
         cout << "Usage: " << argv[0] << "line-of-text-to-test" << endl;
+        return false;
+    }
+    return true;
+}
+
+bool checkArgsForFileOnly( int argc, char* argv[]) {
+    using namespace std;
+    if (argc != 2) {
+        cout << "Usage: " << argv[0] << "<inputFile.txt" << endl;
         return false;
     }
     return true;
