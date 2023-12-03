@@ -48,14 +48,14 @@ std::pair<size_t, int> getLastAlphaDigitIndex(const std::string& str) {
             while (str.find(name,result + 1) != std::string::npos) {
                 result = str.find(name, result + 1);
             }
-                    
+
             if (lastIndex == NO_NAMED_DIGIT_FOUND || result > lastIndex) {
                 lastIndex = result;
                 numberIndex = counter;
             }
         }
     }
-    
+
     if (lastIndex == NO_NAMED_DIGIT_FOUND) return std::pair<size_t,int>(NO_NAMED_DIGIT_FOUND,-1);
     return std::pair<size_t, int>(lastIndex, numberIndex +1);
 }
@@ -85,26 +85,26 @@ int charToInt(const char& input) {
 }
 
 std::pair<int,int> processLine(const std::string& line) {
-        int firstDigit = 0;
-        int lastDigit = 0;
+    int firstDigit = 0;
+    int lastDigit = 0;
 
-        std::pair<size_t, int> firstAlphaIndex = getFirstAlphaDigitIndex(line);
-        std::pair<size_t, int> lastAlphaIndex = getLastAlphaDigitIndex(line);
-        int firstDigitIndex = findFirstDigitIndex(line);
-        int lastDigitIndex = findLastDigitIndex(line);
+    std::pair<size_t, int> firstAlphaIndex = getFirstAlphaDigitIndex(line);
+    std::pair<size_t, int> lastAlphaIndex = getLastAlphaDigitIndex(line);
+    int firstDigitIndex = findFirstDigitIndex(line);
+    int lastDigitIndex = findLastDigitIndex(line);
 
-        if (firstDigitIndex < firstAlphaIndex.first) {
-            firstDigit = charToInt(line[firstDigitIndex]);
-        } else {
-            firstDigit = firstAlphaIndex.second + 1;
-        }
+    if (firstDigitIndex < firstAlphaIndex.first) {
+        firstDigit = charToInt(line[firstDigitIndex]);
+    } else {
+        firstDigit = firstAlphaIndex.second + 1;
+    }
 
-        if (lastAlphaIndex.first == line.length() || lastDigitIndex > (int)lastAlphaIndex.first) {
-            lastDigit = charToInt(line[lastDigitIndex]);
-        } else {
-            lastDigit = lastAlphaIndex.second;
-        }
-        return std::pair<int, int>(firstDigit, lastDigit);
+    if (lastAlphaIndex.first == line.length() || lastDigitIndex > (int)lastAlphaIndex.first) {
+        lastDigit = charToInt(line[lastDigitIndex]);
+    } else {
+        lastDigit = lastAlphaIndex.second;
+    }
+    return std::pair<int, int>(firstDigit, lastDigit);
 }
 
 void printDebugLine(const std::string& line, int first, int second, int number) {
@@ -118,7 +118,7 @@ int main (int argc, char *argv[]) {
         cout << "Usage: " << argv[0] << "line-of-text-to-test" << endl;
         return 0;
     }
-    
+
     if (strcmp(argv[1],"-l") == 0) {
         string line = argv[2];
         cout << "Length: " << line.length() <<endl;
@@ -132,7 +132,7 @@ int main (int argc, char *argv[]) {
 
     ifstream inputFile;
     inputFile.open(argv[1]);
-    
+
     int total = 0;
     string line;
     while (getline(inputFile, line)) {
