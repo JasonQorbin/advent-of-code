@@ -7,21 +7,29 @@
 
 #include "../utils/common.cpp"
 
-struct lineNumbers {
+struct LineNumbers {
     std::vector<int> winningNumbers;
     std::vector<int> playerNumbers;
     int nextColour = 2;
 };
 
-bool numberIsPresent(int winningNumber, lineNumbers numbers) {
+struct ScratchCard {
+    unsigned int cardNumber;
+    LineNumbers numbers;
+    unsigned int instances;
+    unsigned int points;
+    unsigned int matches;
+};
+
+bool numberIsPresent(int winningNumber, LineNumbers numbers) {
     using namespace std;
     auto playerNumberPosition = find(numbers.playerNumbers.cbegin(), numbers.playerNumbers.cend(), winningNumber);
     return playerNumberPosition != numbers.playerNumbers.cend();
 }
 
-lineNumbers readNumbersFromLine(const std::string& line) {
+LineNumbers readNumbersFromLine(const std::string& line) {
     using namespace std;
-    lineNumbers answer;
+    LineNumbers answer;
     stringstream sstream(line);
     string buffer;
 
@@ -47,7 +55,7 @@ lineNumbers readNumbersFromLine(const std::string& line) {
 }
 
 std::pair<int,int> getPointsFromLine (const std::string& line) {
-    lineNumbers numbers = readNumbersFromLine(line);
+    LineNumbers numbers = readNumbersFromLine(line);
     int matches = 0;
     int points = 0;
     for_each(numbers.winningNumbers.cbegin(), numbers.winningNumbers.cend(), [&numbers, &points, &matches](int winningNumberToCheck){
@@ -63,13 +71,36 @@ std::pair<int,int> getPointsFromLine (const std::string& line) {
     return std::pair<int,int>(points, matches);
 }
 
+void determineMatchesAndPoints(ScratchCard& card) {
+    card.points = card.matches = 0;
+    for_each(card.numbers.winningNumbers.cbegin(), card.numbers.winningNumbers.cend(), [&card](int winningNumberToCheck){
+            if (numberIsPresent(winningNumberToCheck, card.numbers)) {
+                ++card.matches;
+                if (card.points == 0) {
+                    card.points = 1;
+                } else {
+                    card.points *= 2;
+                }
+            }
+    });
+}
+
+ScratchCard readInScratchCardNumbers(std::string line) {
+    ScratchCard answer;
+    answer.instances = 1;
+    answer.numbers = readNumbersFromLine(line);
+    return answer;
+}
+
 int main (int argc, char* argv[]) {
     if (!checkArgs(argc, argv)  ) return 0;
     using namespace std;
     ifstream inputFile;
     inputFile.open(argv[1]);
-
+    
+    vector<string> allLines;
     int totalPoints  = 0;
+    int totalCards = 0;
     string line;
     
     if (argc == 3 && strcmp(argv[1], "-l") == 0) {
@@ -88,19 +119,29 @@ int main (int argc, char* argv[]) {
         }
         while (inputFile.good()) {
             getline( inputFile, line );
-            int points = 0;
-
-            if ( line.length() > 0 ) {
-                auto result = getPointsFromLine( line );
-                points = result.first;
-                int matches = result.second;
-                totalPoints += points;
-                cout << line << " Points : " << points << " Matches : " << matches << endl;
+            allLines.push_back(line);
+        }
+        vector<ScratchCard> scratchCards;
+        for_each(allLines.begin(), allLines.end(), [&scratchCards] (string currentLine) {
+            if ( currentLine.length() > 0 ) scratchCards.push_back(readInScratchCardNumbers(currentLine)); 
+        });
+        
+        for (int i = 0; i < scratchCards.size(); ++i ) {
+            determineMatchesAndPoints(scratchCards[i]);
+            for (int j = 1; j <= scratchCards[i].matches; ++j) {
+                scratchCards[i+j].instances += scratchCards[i].instances;
             }
         }
+
+        for_each(scratchCards.begin(), scratchCards.end(), [&totalPoints, &totalCards] (ScratchCard currentCard) {
+            totalPoints += currentCard.points;
+            totalCards += currentCard.instances;
+        });
+
     }
     
     cout << "Total points: " << totalPoints << endl;
+    cout << "Total cards: " << totalCards << endl;
     inputFile.close();
 }
 
