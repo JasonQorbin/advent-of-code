@@ -33,22 +33,40 @@ void printVector(const std::string& title, const std::vector<int>& list) {
     cout << endl;
 }
 
-int calculateDistanceTravelled (const int buttonTime, const int raceTime) {
-    int timeMoving  = raceTime - buttonTime;
+long long calculateDistanceTravelled (const long long buttonTime, const long long raceTime) {
+    long long timeMoving  = raceTime - buttonTime;
     return timeMoving * buttonTime;
 }
 
-bool raceOutcome (const int buttonTime, const int raceTime, const int targetDistance){
+bool raceOutcome (const long long buttonTime, const long long raceTime, const long long targetDistance){
     return calculateDistanceTravelled(buttonTime, raceTime) > targetDistance;
 }
 
-int getNumberOfWinConditions (const int raceTime, const int targetDistance) {
-    int  counter = 0;
-    for (int buttonTime = 1; buttonTime < raceTime; buttonTime++) {
+long long getNumberOfWinConditions (const long long raceTime, const long long targetDistance) {
+    long long counter = 0;
+    for (long long buttonTime = 1; buttonTime < raceTime; buttonTime++) {
         if (raceOutcome(buttonTime, raceTime, targetDistance)) counter++;
     }
 
     return counter;
+}
+
+long long getConcatNumber(std::vector<int> list) {
+    std::stringstream buffer;
+    for (int i : list) {
+        buffer << i;
+    }
+
+    long long answer = 0;
+    char character;
+    while (buffer) {
+        character = buffer.get();
+        if (character == -1 ) continue;
+        int digit = character - '0';
+        answer = answer * 10 + digit;
+    }
+ 
+    return answer;
 }
 
 
@@ -65,6 +83,8 @@ int main (int argc, char* argv[]) {
     
     times = fetchData(inputFile);
     distances = fetchData(inputFile);
+    long long bigTime = getConcatNumber(times);
+    long long bigDistance = getConcatNumber(distances);
     
     inputFile.close();
 
@@ -79,6 +99,10 @@ int main (int argc, char* argv[]) {
         answer *= wins;
     }
     
-    cout << "Final answer = " << answer << endl;
+    cout << "Separate answer = " << answer << endl;
+    cout << endl;
+
+    cout << "Part 2:\n" << "Concatenated time = "  << bigTime << " \nConcatenated distance = " << bigDistance << "\n\n"
+         << "Combined answer = " << getNumberOfWinConditions(bigTime, bigDistance) << endl;
     
 }
