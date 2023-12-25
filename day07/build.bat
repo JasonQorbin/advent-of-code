@@ -1,0 +1,1 @@
+g++ -o main.exe day07.cpp card.cpp cardhand.cpp
