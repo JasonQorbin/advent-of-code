@@ -5,7 +5,7 @@
 #include <sstream>
 #include <algorithm>
 
-#include "../utils/common.cpp"
+#include "../../utils/common.cpp"
 #include "card.h"
 #include "cardhand.h"
 
@@ -37,7 +37,7 @@ int main (int argc, char* argv[]) {
 
     std::sort(hands.begin(), hands.end());
     unsigned long totalScore = 0;
-    for (int index = 0; index < hands.size(); ++index) {
+    for (unsigned int index = 0; index < hands.size(); ++index) {
         totalScore += (index + 1) * hands[index].bid;
     }
 

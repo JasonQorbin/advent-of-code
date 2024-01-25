@@ -1,1 +1,1 @@
-g++ -o main.exe day07.cpp card.cpp cardhand.cpp
+g++ -o bin/main.exe src/day07.cpp src/card.cpp src/cardhand.cpp
