@@ -6,7 +6,8 @@
 
 
 struct CardHand {
-
+  
+  bool usingJokers;
   Card hand[5];
   int bid;
   static const int HAND_SIZE = 5;
@@ -20,6 +21,8 @@ struct CardHand {
   // Five of a kind = 7
   int getLevel() const;
   std::string getLevelString() const;
+  int countCard(Card card) const;
+  int maxCardCount() const;
 
   void populateHand(const std::string &inputString);
 
