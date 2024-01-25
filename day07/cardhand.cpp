@@ -36,64 +36,64 @@ void CardHand::populateHand(const std::string& inputString) {
     }
 }
 
-int countCard(Card card, const Card (&hand)[]) {
+int countCard(Card card, const CardHand& cardHand) {
     const int size = CardHand::HAND_SIZE;
     int count = 0;
-    for (int i = 0; i < size; ++i ) if (hand[i] == card) ++count;
+    for (int i = 0; i < size; ++i ) if (cardHand.hand[i] == card) ++count;
 
     return count;
 }
 
-int maxCardCount(const Card (&hand)[]) {
+int maxCardCount(const CardHand& cardHand) {
     int max = 0;
     for (int i = 0; i < CardHand::HAND_SIZE; ++i) {
-        int count = countCard(hand[i], hand);
+        int count = countCard(cardHand.hand[i], cardHand);
         if (count > max) max = count;
     }
     return max;
 }
 
-bool hasFive(const Card (&hand)[]) {
-    return maxCardCount(hand) == 5;
+bool CardHand::hasFive() const{
+    return maxCardCount(*this) == 5;
 }
 
-bool hasFour(const Card (&hand)[]) {
-    return maxCardCount(hand) == 4;
+bool CardHand::hasFour() const {
+    return maxCardCount(*this) == 4;
 }
 
-bool hasTriple(const Card (&hand)[]) {
-    return maxCardCount(hand) == 3;
+bool CardHand::hasTriple() const{
+    return maxCardCount(*this) == 3;
 }
 
-int countPairs(const Card (&hand)[]) {
+int CardHand::countPairs() const {
     int numberOfPairsFound = 0;
-    const int size = 5;
+    const int size = CardHand::HAND_SIZE;
     for (int i = 0; i < size; ++i ) {
-        if (countCard(hand[i], hand) == 2)  ++numberOfPairsFound;
+        if (countCard(this->hand[i], *this) == 2)  ++numberOfPairsFound;
     }
     return numberOfPairsFound / 2; //Because you find each pair twice
 }
 
-bool hasPair(const Card (&hand)[]) {
-    return countPairs(hand) > 0 ;
+bool CardHand::hasPair() const {
+    return countPairs() > 0 ;
 }
 
-bool has2Pairs(const Card (&hand) []) {
-    return countPairs(hand) == 2;
+bool CardHand::has2Pairs() const {
+    return countPairs() == 2;
 }
 
 int CardHand::getLevel() const {
-    if (hasFive(hand)) return 7;
+    if (hasFive()) return 7;
 
-    if (hasFour(hand)) return 6;
+    if (hasFour()) return 6;
 
-    if (hasPair(hand) && hasTriple(hand)) return 5; //Full House
+    if (hasPair() && hasTriple()) return 5; //Full House
 
-    if (hasTriple(hand)) return 4;
+    if (hasTriple()) return 4;
 
-    if (has2Pairs(hand)) return 3;
+    if (has2Pairs()) return 3;
 
-    if (hasPair(hand)) return 2;
+    if (hasPair()) return 2;
 
     return 1;
 }
