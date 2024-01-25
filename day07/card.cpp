@@ -3,47 +3,20 @@
 Card cardFromCharacter(const char& cardCharacter) {
     Card card;
     switch (cardCharacter) {
-        case '2':
-            card = TWO;
-            break;
-        case '3':
-            card = THREE;
-            break;
-        case '4':
-            card = FOUR;
-            break;
-        case '5':
-            card = FIVE;
-            break;
-        case '6':
-            card = SIX;
-            break;
-        case '7':
-            card = SEVEN;
-            break;
-        case '8':
-            card = EIGHT;
-            break;
-        case '9':
-            card = NINE;
-            break;
-        case 'T':
-            card = TEN;
-            break;
-        case 'J':
-            card = JACK;
-            break;
-        case 'Q':
-            card = QUEEN;
-            break;
-        case 'K':
-            card = KING;
-            break;
-        case 'A':
-            card = ACE;
-            break;
-        default:
-            card = ERROR;
+        case '2': card = TWO; break;
+        case '3': card = THREE; break;
+        case '4': card = FOUR; break;
+        case '5': card = FIVE; break;
+        case '6': card = SIX; break;
+        case '7': card = SEVEN; break;
+        case '8': card = EIGHT; break;
+        case '9': card = NINE; break;
+        case 'T': card = TEN; break;
+        case 'J': card = JACK; break;
+        case 'Q': card = QUEEN; break;
+        case 'K': card = KING; break;
+        case 'A': card = ACE; break;
+        default: card = ERROR;
     }
     return card;
 }
