@@ -20,3 +20,4 @@ enum Card {
 
 Card cardFromCharacter(const char& cardCharacter);
 char getCardCharacter(Card card);
+#endif
