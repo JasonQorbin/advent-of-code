@@ -6,9 +6,8 @@
 #include <algorithm>
 
 #include "../../utils/common.cpp"
-#include "card.h"
 #include "cardhand.h"
-#define DEBUG
+//#define DEBUG
 
 unsigned int getTotalScore(std::vector<CardHand>& hands);
 void printSomeHands(const std::vector<CardHand>& hands, std::string heading);
@@ -74,7 +73,7 @@ void printSomeHands (const std::vector<CardHand>& hands, std::string heading) {
         cout << '=';
     }
     cout << endl << endl;
-    unsigned int numberOfLines = 10;
+    unsigned int numberOfLines = 1000;
     if (hands.size() < numberOfLines) { numberOfLines = hands.size();}
     
     for (unsigned int i = 0; i < numberOfLines; ++i) {

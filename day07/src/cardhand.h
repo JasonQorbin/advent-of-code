@@ -4,9 +4,8 @@
 #include "card.h"
 #include <string>
 
-
 struct CardHand {
-  
+
   bool usingJokers;
   Card hand[5];
   int bid;
@@ -55,10 +54,12 @@ struct CardHand {
     } else {
       bool answer = false;
       for (int index = 0; index < HAND_SIZE; ++index) {
-        if (lhs.hand[index] == rhs.hand[index]) {
+        int leftHandValue = (lhs.hand[index] == JACK && lhs.usingJokers) ? 0 : lhs.hand[index];
+        int rightHandValue = (rhs.hand[index] == JACK && rhs.usingJokers) ? 0 : rhs.hand[index];
+        if (leftHandValue == rightHandValue) {
           continue;
         } else {
-          answer = lhs.hand[index] < rhs.hand[index];
+          answer = leftHandValue < rightHandValue;
           break;
         }
       }
@@ -69,10 +70,10 @@ struct CardHand {
   bool hasFive() const;
   bool hasFour() const;
   bool hasTriple() const;
-  int  countPairs() const;
+  int countPairs() const;
   bool hasPair() const;
   bool has2Pairs() const;
-  
+
   void printHand() const;
   void printHand(int ranking) const;
 };

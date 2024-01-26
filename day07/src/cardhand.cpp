@@ -27,7 +27,7 @@ void CardHand::printHand(int ranking) const {
     cout << getCardCharacter(card);
   }
 
-  cout << ' ' << getLevelString() << " Bid: " << bid
+  cout << ' ' << getLevelString() << " Bid: " << bid << " Ranking: " << ranking
        << " Score: " << bid * ranking << " Joker flag: " << usingJokers << endl;
 }
 
@@ -62,8 +62,7 @@ int CardHand::countCard(Card card) const {
 
 int CardHand::maxCardCount() const {
   int max = 0;
-  for (int i = 0; i < HAND_SIZE; ++i) {
-    Card currentCard = hand[i];
+  for (Card currentCard : hand) {
     if ( currentCard != JACK || !usingJokers) {
         int count = countCard(currentCard);
         if (count > max) max = count;
@@ -99,23 +98,28 @@ bool CardHand::has2Pairs() const { return countPairs() == 2; }
 int CardHand::getLevel() const {
   int answer =  0;
   int jokers = usingJokers ? countCard(JACK) : 0;
-
-  if (hasFive()) {
-    answer += 7;
-  } else  if (hasFour()) {
-    answer += 6;
-  } if (hasPair() && hasTriple()) {
-    answer += 5; // Full House
-  } else if (hasTriple()) {
-      answer += 4;
-  } else if (has2Pairs()) {
-    answer += 3;
-  } else if (hasPair()) {
-     answer += 2;
-  } else {
-    answer += 1;
+  
+  if ( jokers == 5 ) {
+      return 7;
   }
 
+  if (hasFive()) {
+    answer = 7;
+  } else  if (hasFour()) {
+    answer = 6;
+  } else if (hasPair() && hasTriple()) {
+    answer = 5; // Full House
+  } else if (hasTriple()) {
+      answer = 4;
+  } else if (has2Pairs()) {
+    answer = 3;
+  } else if (hasPair()) {
+     answer = 2;
+  } else {
+    answer = 1;
+  }
+  //std::cout << std::endl << "Interim answer: " << answer << std::endl;
+  //std::cout << "Jokers: " << jokers << std::endl;
   for (int i = jokers; i > 0; --i){
     switch (answer) {
         case 4:
@@ -125,19 +129,22 @@ int CardHand::getLevel() const {
         case 3:
             //A two-pair always goes to a full-house, not a triple
             answer = 5;
+            break;
         case 2:
             //A pair with at least 2 jokers must go to a four-of-a-kind
-            if (i <= 2) {
+            if (i >= 2) {
                 answer = 6;
                 --i;
             } else {
-                ++answer;
+                //A pair with one joker must go to a triple not a 2-pair
+                answer = 4;
             }
             break;
         default:
             ++answer;
     }   
   }
+  //std::cout << "Final answer: " << answer << std::endl;
   return answer;
 }
 
