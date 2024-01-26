@@ -10,7 +10,7 @@
 /// with a teset line after it.
 bool checkArgs(int argc, char* argv[]) {
     using namespace std;
-    if (argc < 2 || strcmp(argv[1],"-l") == 0 && argc < 3) {
+    if (argc < 2 || ( strcmp(argv[1],"-l") == 0 && argc < 3 )) {
         cout << "Usage: " << argv[0] << "<inputFile.txt>" << endl;
         cout << "Usage: " << argv[0] << "line-of-text-to-test" << endl;
         return false;
