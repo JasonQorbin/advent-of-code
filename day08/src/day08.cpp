@@ -45,6 +45,8 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+
+/// Counts the number of steps from the 'AAA' node to the 'ZZZ' node.
 int stepsToExit(std::queue<char> directions, std::unordered_map<std::string, Node> nodes) {
     int answer = 0;
     std::string currentAddress = "AAA";
@@ -53,6 +55,7 @@ int stepsToExit(std::queue<char> directions, std::unordered_map<std::string, Nod
         ++answer;
         Node currentNode = nodes.find(currentAddress)->second;
         char direction = directions.front();
+        //Remove the direction at the head of the queue and add it back to the end to allow for the repeating behaviour
         directions.pop();
         directions.push(direction);
 
