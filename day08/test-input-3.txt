@@ -1,0 +1,9 @@
+LLR
+
+AAA = (BBB, BBB)
+BBB = (AAA, ZZZ)
+ZZZ = (ZZZ, ZZZ)
+CWA = (ROP, ERT)
+ERT = (CWA, ROP)
+ROP = (ERT, QWZ)
+QWZ = (ERT, CWA)
