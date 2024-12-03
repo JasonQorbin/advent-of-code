@@ -7,8 +7,15 @@
 #include <sstream>
 #include <vector>
 
+/**
+ * Used for part 1 of the puzzle. Applies the rules given to determine if the levels in a report are safe.
+ *
+ * @param report The Report line to examine
+ *
+ * @return true if the report is safe
+ */
 bool isReportSafe(const std::vector<int>& report) {
-    bool ascending = report[0] < report[1];
+    const bool ascending = report[0] < report[1];
     for (int i = 1; i < report.size(); i++ ) {
       if (report[i] == report[i-1]) return false;
       if (ascending && report[i] < report[i-1] || !ascending && report[i] > report[i-1]) return false;
@@ -17,18 +24,63 @@ bool isReportSafe(const std::vector<int>& report) {
       if (difference < 0) {
           difference *= -1;
       }
+
+      //Only need to check if the distance is more than 3, because we checked earlier if it was zero when testing the
+      //ascending/descending rule.
       if (difference > 3) return false;
     }
 
     return true;
 }
 
-void printReport(const std::vector<int>& report, bool safe, int index) {
+/**
+ * Removes the level at the specified index from the given report.
+ *
+ * @param report The report to mutate
+ * @param index The index of the unwanted level.
+ */
+void removeLevelAt(std::vector<int>& report, const int index) {
+    if (index < 0 || index >= report.size()) return;
+
+    for (int i = index; i < report.size() -1; i++) {
+        report[i] = report[i + 1];
+    }
+    report.pop_back();
+}
+
+/**
+ * Used in part 2 of the puzzle. First checks the report normally. If unsafe, it will successively remove one level
+ * from the report, from front to back and test again. As soon as it finds a safe condition it returns true else it
+ * returns false.
+ *
+ * @param report The report to check
+ * @return true if the report is considered safe with the Problem Dampener active.
+ */
+bool isReportSafeWithDampener(const std::vector<int>& report) {
+    if (isReportSafe(report)) return true;
+
+    for (int i = 0; i < report.size(); i++) {
+        auto shortReport = report;
+        removeLevelAt(shortReport, i);
+        if (isReportSafe(shortReport)) return true;
+    }
+    return false;
+}
+
+/**
+ * Prints out the report for debugging purposes.
+ *
+ * @param report The report line to print
+ * @param safe Whether the report was found to be safe or not
+ * @param index The line number. Gets printed before the report levels
+ */
+void printReport(const std::vector<int>& report, const bool safe, const int index) {
     std::cout << index << " : ";
     for (const auto& level : report) {
         std::cout << level << " ";
     }
-    std::cout << " | " << safe << std::endl;;
+    const std::string safeString = safe ? "Safe" : "Unsafe";
+    std::cout << " | " << safeString << std::endl;;
 }
 
 int main (int argc, const char * argv[]) {
@@ -68,19 +120,33 @@ int main (int argc, const char * argv[]) {
 
     int totalSafe = 0;
     int totalUnsafe = 0;
+    int totalSafeWithTolerance = 0;
+    int totalUnsafeWithTolerance = 0;
     int index = 0;
     for (const auto& report : reports) {
         index++;
         bool safe = isReportSafe(report);
+        bool safeWithTolerance = isReportSafeWithDampener(report);
         if (safe) {
           totalSafe++;
         } else {
           totalUnsafe++;
         }
-        printReport(report, safe, index);
+        if (safeWithTolerance) {
+            totalSafeWithTolerance++;
+        } else {
+            totalUnsafeWithTolerance++;
+        }
+        //For debug purposes, print out the report marked as unsafe
+        if (!safeWithTolerance) {
+            printReport(report, safeWithTolerance, index);
+        }
     }
 
     std::cout << "Safe reports: " << totalSafe << std::endl;
     std::cout << "Unsafe reports: " << totalUnsafe << std::endl;
+    std::cout << "Safe reports with Problem Dampener applied: " << totalSafeWithTolerance << std::endl;
+    std::cout << "Unsafe reports with Problem Dampener applied: " << totalUnsafeWithTolerance << std::endl;
+
     return 0;
 }
