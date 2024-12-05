@@ -4,6 +4,27 @@
 #include <string>
 #include <string.h>
 
+bool mulEnabled = true;
+int mulCharactersFound = 0;
+int doCharactersFound = 0;
+int dontCharactersFound = 0;
+const char* mulString = "mul(";
+const char* doString = "do()";
+const char* dontString = "don't()";
+
+void resetCounters() {
+    mulCharactersFound = 0;
+    doCharactersFound = 0;
+    dontCharactersFound = 0;
+}
+
+void checkForCharacters(const char c, const char* searchString, int& counter) {
+    if (searchString[counter] == c) {
+        ++counter;
+    } else {
+        counter = 0;
+    }
+}
 
 /**
  * Looks for the start of a mul function. Steps forward in the stream stopping either the cursor is at the position
@@ -12,20 +33,30 @@
  *
  * @returns true if the stream was stopped after a mul function symbol, and false if the end of the stream was reached.
  */
-bool findFunctionStart(std::stringstream& stream) {
+bool findFunctionStart(std::stringstream& stream ) {
     char c = '\0';
 
-    int charactersFound = 0;
-    const char* searchString = "mul(";
     while (stream.good()) {
         stream.get(c);
-        if (c == searchString[charactersFound]) {
-          charactersFound++;
-        } else {
-            charactersFound = 0;
+        checkForCharacters(c, mulString, mulCharactersFound);
+        checkForCharacters(c, doString, doCharactersFound);
+        checkForCharacters(c, dontString, dontCharactersFound);
+
+        if (mulCharactersFound == strlen(mulString)) {
+            resetCounters();
+            if (mulEnabled) {
+                return true;
+            }
         }
-        if (charactersFound == strlen(searchString)) {
-          return true;
+
+        if (doCharactersFound == strlen(doString)) {
+            resetCounters();
+            mulEnabled = true;
+        }
+
+        if (dontCharactersFound == strlen(dontString)) {
+            resetCounters();
+            mulEnabled = false;
         }
     }
     return false;
