@@ -24,7 +24,22 @@ enum class HorizontalDirection {
   RIGHT
 };
 
-bool checkMatch(const std::vector<std::string>& matrix, const Position p, const VerticalDirection vertical, const HorizontalDirection horizontal) {
+typedef std::vector<std::string> Matrix;
+
+/**
+ * Checks the matrix from the given position and in the specified direction looking if the characters spell out the word 'XMAS'
+ *
+ *  Used in part 1 of the puzzle.
+ *
+ * @param matrix The matrix to search
+ * @param p The starting position
+ * @param vertical The vertical direction to step after each letter
+ * @param horizontal The horizontal direction to step after each letter
+ * @return True if the word 'XMAS' was found
+ */
+bool checkMatch(const Matrix& matrix, const Position p, const VerticalDirection vertical, const HorizontalDirection horizontal) {
+  if (vertical == VerticalDirection::NONE && horizontal == HorizontalDirection::NONE) return false;
+
   const int gridWidth = matrix[0].size();
   const int gridHeight = matrix.size();
 
@@ -69,19 +84,19 @@ bool checkMatch(const std::vector<std::string>& matrix, const Position p, const 
   return c_1 == 'X' && c_2 == 'M' && c_3 == 'A' && c_4 == 'S';
 }
 
-/*
+/**
  * Check if the character as the given position is a 'M' or an 'S'
  *
  * @param matrix The matrix
  * @param p The position to check
  * @return true if the character is either an M or an S
  */
-bool isCornerCharacter(const std::vector<std::string>& matrix, Position p) {
+bool isCornerCharacter(const Matrix& matrix, Position p) {
   char toCheck = matrix[p.y][p.x];
   return toCheck == 'M' || toCheck == 'S';
 }
 
-bool areCornersValid(const std::vector<std::string>& matrix , const Position p) {
+bool areCornersValid(const Matrix& matrix , const Position p) {
   if (!isCornerCharacter(matrix, p)) return false;
   if (!isCornerCharacter(matrix, Position{p.x, p.y+2})) return false;
   if (!isCornerCharacter(matrix, Position{p.x+2, p.y})) return false;
@@ -90,14 +105,49 @@ bool areCornersValid(const std::vector<std::string>& matrix , const Position p) 
   return true;
 }
 
-bool isTopCornerOpposite(const std::vector<std::string>& matrix, Position p) {
+/**
+ * Checks if the top-left corner and bottom-right corners are not the same character.
+ *
+ * Assumes that you already checked that all the corners are either an 'M' or an 'S'.
+ *
+ * If the corners are not the same and the centre character is an 'A' then the diagonal will spell "MAS" in some
+ * direction or another.
+ *
+ * @param matrix The matrix to search
+ * @param p A position pointing to the top-left corner of the square being checked.
+ * @return True if the top-left and bottom-right characters are not equal.
+ */
+bool isTopCornerOpposite(const Matrix& matrix, Position p) {
   return matrix[p.y][p.x] != matrix[p.y+2][p.x+2];
 }
-bool isBottomCornerOpposite(const std::vector<std::string>& matrix, Position p) {
+
+/**
+ * Checks if the bottom-left corner and top-right corners are not the same character.
+ *
+ * Assumes that you already checked that all the corners are either an 'M' or an 'S'.
+ *
+ * If the corners are not the same and the centre character is an 'A' then the diagonal will spell "MAS" in some
+ * direction or another.
+ *
+ * @param matrix The matrix to search
+ * @param p A position pointing to the top-left corner of the square being checked.
+ * @return True if the bottom-left and top-right characters are not equal.
+ */
+bool isBottomCornerOpposite(const Matrix& matrix, Position p) {
   return matrix[p.y+2][p.x] != matrix[p.y][p.x+2];
 }
 
-bool checkCrossMatch(const std::vector<std::string>& matrix, Position p) {
+/**
+ * Checks for the letters "MAS" in an X shape.
+ * Expects the Position p to point to the top left corner of the square that contains the X shape.
+ *
+ * Used in Part 2
+ *
+ * @param matrix The matrix to search in
+ * @param p The position value poitning to the top left of the square to search in.
+ * @return True if a "MAS" in anX shape.
+ */
+bool checkCrossMatch(const Matrix& matrix, Position p) {
   //Only check down and to the left to avoid finding duplicates.
 
   const size_t gridWidth = matrix[0].size();
@@ -135,35 +185,44 @@ bool checkCrossMatch(const std::vector<std::string>& matrix, Position p) {
   return true;
 }
 
-bool checkHorizontalLeft(const std::vector<std::string>& matrix, Position p) {
+bool checkHorizontalLeft(const Matrix& matrix, Position p) {
   return checkMatch (matrix, p, VerticalDirection::NONE, HorizontalDirection::LEFT);
 }
 
-bool checkHorizontalRight(const std::vector<std::string>& matrix, Position p) {
+bool checkHorizontalRight(const Matrix& matrix, Position p) {
   return checkMatch (matrix, p, VerticalDirection::NONE, HorizontalDirection::RIGHT);
 }
 
-bool checkVerticalUp(const std::vector<std::string>& matrix, Position p) {
+bool checkVerticalUp(const Matrix& matrix, Position p) {
   return checkMatch (matrix, p, VerticalDirection::UP, HorizontalDirection::NONE);
 }
 
-bool checkVerticalDown(const std::vector<std::string>& matrix, Position p) {
+bool checkVerticalDown(const Matrix& matrix, Position p) {
   return checkMatch (matrix, p, VerticalDirection::DOWN, HorizontalDirection::NONE);
 }
-bool checkDiagonalUpLeft(const std::vector<std::string>& matrix, Position p) {
+bool checkDiagonalUpLeft(const Matrix& matrix, Position p) {
   return checkMatch (matrix, p, VerticalDirection::UP, HorizontalDirection::LEFT);
 }
-bool checkDiagonalDownLeft(const std::vector<std::string>& matrix, Position p) {
+bool checkDiagonalDownLeft(const Matrix& matrix, Position p) {
   return checkMatch (matrix, p, VerticalDirection::DOWN, HorizontalDirection::LEFT);
 }
-bool checkDiagonalUpRight(const std::vector<std::string>& matrix, Position p) {
+bool checkDiagonalUpRight(const Matrix& matrix, Position p) {
   return checkMatch (matrix, p, VerticalDirection::UP, HorizontalDirection::RIGHT);
 }
-bool checkDiagonalDownRight(const std::vector<std::string>& matrix, Position p) {
+bool checkDiagonalDownRight(const Matrix& matrix, Position p) {
   return checkMatch (matrix, p, VerticalDirection::DOWN, HorizontalDirection::RIGHT);
 }
 
-int checkAllDirections(const std::vector<std::string>& matrix, Position p) {
+/**
+ * Checks the matrix in all directions from the given position looking for the string "XMAS".
+ *
+ * Used in Part 1.
+ *
+ * @param matrix The matrix from the file.
+ * @param p The position to check from.
+ * @return The number of matches found.
+ */
+int checkAllDirections(const Matrix& matrix, Position p) {
   int answer = 0;
   answer += checkHorizontalLeft(matrix, p) ? 1 : 0;
   answer += checkHorizontalRight(matrix, p) ? 1 : 0;
@@ -174,6 +233,12 @@ int checkAllDirections(const std::vector<std::string>& matrix, Position p) {
   answer += checkDiagonalUpLeft(matrix, p) ? 1 : 0;
   answer += checkDiagonalUpRight(matrix, p) ? 1 : 0;
   return answer;
+}
+
+void readInputFile(Matrix& matrix, std::ifstream& inputFile) {
+  for (std::string line; std::getline(inputFile, line); ) {
+    matrix.push_back(line);
+  }
 }
 
 int main (int argc, char** argv) {
@@ -188,11 +253,8 @@ int main (int argc, char** argv) {
     return 74;
   }
 
-  std::vector<std::string> matrix;
-
-  for (std::string line; std::getline(inputFile, line); ) {
-    matrix.push_back(line);
-  }
+  Matrix matrix;
+  readInputFile(matrix, inputFile);
 
   const int gridHeight = matrix.size();
   const int gridWidth = matrix[0].size();
