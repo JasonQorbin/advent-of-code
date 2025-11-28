@@ -92,9 +92,11 @@ For some reason, the Elves also need to know the **middle page number** of each 
 currently only printing the correctly-ordered updates, you will need to find the middle page number of each 
 correctly-ordered update. In the above example, the correctly-ordered updates are:
 
-75,47,**61**,53,29
-97,61,**53**,29,13
-75,**29**,13
+- 75,47,**61**,53,29
+
+- 97,61,**53**,29,13
+
+- 75,**29**,13
 
 These have middle page numbers of `61`, `53`, and `29` respectively. Adding these page numbers together gives **143**.
 
@@ -123,7 +125,4 @@ After taking **only the incorrectly-ordered updates** and ordering them correctl
 Find the updates which are not in the correct order. **What do you get if you add up the middle page numbers after
 correctly ordering just those updates?**
 
-| Attempted answer | Result  |
-|------------------|---------|
-| 6618             | too low |
-| 6779             | too low |
+Correct answer: 6938
