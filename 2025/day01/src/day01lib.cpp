@@ -1,6 +1,7 @@
 #include "../include/day01lib.hpp"
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <cstdlib>
 
@@ -121,19 +122,20 @@ std::string getNumber(unsigned int number, std::string colour) {
 
 void printColourIfZero(const unsigned int number, std::string colour) {
     if ( number == 0 ) {
-        std::cout << getNumber(number, colour);
+        std::cout << std::right << std::setw(2) << getNumber(number, colour);
     } else {
-        std::cout << number;
+        std::cout << std::right << std:: setw(2) << std::to_string(number);
     }
 }
 
 void printDebugInfo (const DebugInfo& info) {
     using namespace std;
-    cout << "Step: " << info.stepNumber << " | " << "Rotation: " << info.rotation.first;
+    cout << "Step: " << right << setw(4) << info.stepNumber << " | "
+         << "Rotation: " << info.rotation.first;
     if (info.rotation.second > 100) {
-        cout << Colour::BoldRed << info.rotation.second << Colour::Reset;
+        cout << Colour::BoldRed << left << setw(3) <<info.rotation.second << Colour::Reset;
     } else {
-        cout << info.rotation.second;
+        cout << left << setw(3) << info.rotation.second;
     }
 
     cout << " | " <<  "Dial: ";
@@ -143,17 +145,17 @@ void printDebugInfo (const DebugInfo& info) {
 
     cout << " | Passes: " << info.prevPasses << "->";
     if (info.currentPasses != info.prevPasses) {
-        cout << Colour::Yellow << info.currentPasses << Colour::Reset;
+        cout << Colour::Yellow << right << setw(4) <<info.currentPasses << Colour::Reset;
     } else {
-        cout << info.currentPasses;
+        cout << right << setw(4) << info.currentPasses;
     }
 
 
     cout << " | " << "Stops: " << info.prevStops << "->";
     if (info.currentStops != info.prevStops) {
-        cout << Colour::Yellow << info.currentStops << Colour::Reset;
+        cout << Colour::Yellow << right << setw(4) <<info.currentStops << Colour::Reset;
     } else {
-        cout << info.currentStops;
+        cout << right << setw(4) << info.currentStops;
     }
 
     if (info.finalDial ==0 && info.currentStops == info.prevStops) cout << "Stops should increase but didn't";
