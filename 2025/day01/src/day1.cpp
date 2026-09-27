@@ -1,7 +1,5 @@
 #include <fstream>
 #include <iostream>
-#include <istream>
-#include <string>
 
 
 #include "../include/day01lib.hpp"
@@ -24,9 +22,11 @@ int main (int argc, char** argv) {
     }
 
     rotations rots = readFile(inputFile);
-    unsigned int zeroes = applyRotations(rots);
+    Zeroes zeroes = applyRotations(rots);
 
-    cout << "Number of times we stopped on zero: " << zeroes << endl;
+    cout << "Number of times we stopped on zero: " << zeroes.stops << endl;
+    cout << "Number of times we passed zero: " << zeroes.passes << endl;
+    cout << "Total number of times we saw zero: " << zeroes.passes + zeroes.stops << endl;
 
     inputFile.close();
 
