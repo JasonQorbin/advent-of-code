@@ -19,7 +19,6 @@ rotations readFile(std::ifstream& inputFile) {
     do {
         std::getline(inputFile, line);
         std::pair<char, unsigned int> rotation = std::make_pair(line[0], std::stoi(line.substr(1)));
-        //DEBUG: //std::cout << "Saving rotation: " << rotation.first << " " << rotation.second << std::endl;
         answer.push_back(rotation);
     } while (inputFile.good());
     return answer;
